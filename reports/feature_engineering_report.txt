@@ -1,0 +1,114 @@
+============================================================
+SPAM EMAIL CLASSIFIER — FEATURE ENGINEERING REPORT
+Phase 3: TF-IDF Text Feature Engineering
+============================================================
+
+--------------------------------------------------
+1. DATASET SPLIT & PARTITIONING
+--------------------------------------------------
+Input records:               5,695
+Training records (80%):      4,556
+Testing records  (20%):      1,139
+Train/Test split ratio:      4556/1139 (80.0% / 20.0%)
+Stratification:              Enabled (stratify=y, random_state=42)
+
+Training class distribution:
+  - Ham  (0): 3,462 (75.99%)
+  - Spam (1): 1,094 (24.01%)
+
+Testing class distribution:
+  - Ham  (0): 865 (75.94%)
+  - Spam (1): 274 (24.06%)
+
+--------------------------------------------------
+2. TF-IDF VECTORIZER CONFIGURATION
+--------------------------------------------------
+- ngram_range:               (1, 2) (Unigrams + Bigrams)
+- min_df:                    2 (Ignore terms in < 2 emails)
+- max_df:                    0.95 (Ignore terms in > 95% of emails)
+- sublinear_tf:              True (Logarithmic TF scaling: 1 + log(tf))
+- max_features:              None (Natural vocabulary preserved)
+
+--------------------------------------------------
+3. FEATURE MATRIX ANALYSIS
+--------------------------------------------------
+Number of learned features:  121,288
+Training matrix shape:       (4556, 121288) (samples, features)
+Testing matrix shape:        (1139, 121288) (samples, features)
+Training non-zero values:    1,200,470
+Testing non-zero values:     282,633
+Training matrix sparsity:    99.7828%
+Testing matrix sparsity:     99.7954%
+
+Matrix Dimension Explanation:
+  - The shape (4556, 121288) represents 4,556 email training instances
+    represented across 121,288 unique unigram and bigram feature coordinates.
+  - A sparsity of ~99.78% indicates that out of over 552 million matrix cells,
+    only 1.20 million contain non-zero weights, perfectly handled by scipy sparse CSR matrices.
+
+--------------------------------------------------
+4. VOCABULARY & FEATURE INSPECTION
+--------------------------------------------------
+Total vocabulary size:       121,288 terms
+
+First 30 features alphabetically:
+  'aa', 'aa and', 'aa corp', 'aa new', 'aa numtoken', 'aa pool', 'aa program', 'aa regarding', 'aa the', 'aa will', 'aaa', 'aaa infinite', 'aaa numtoken', 'aall', 'aall credit', 'aaron', 'aaron emailtoken', 'aaron gould', 'ab', 'ab html', 'ab lx', 'ab numtoken', 'abacus', 'abacus direct', 'abacus has', 'abacus retail', 'abacus too', 'abacus who', 'abahy', 'abahy mehta'
+
+Sample Unigram Features:
+  'aa', 'aaa', 'aall', 'aaron', 'ab', 'abacus', 'abahy', 'abandon', 'abandoned', 'abandonment'
+
+Sample Bigram Features:
+  'aa and', 'aa corp', 'aa new', 'aa numtoken', 'aa pool', 'aa program', 'aa regarding', 'aa the', 'aa will', 'aaa infinite'
+
+--------------------------------------------------
+5. REPRESENTATIVE SAMPLE INSPECTIONS (TF-IDF WEIGHTS)
+--------------------------------------------------
+--- Sample Train Index 0 [Ham (0)] ---
+Snippet:              energy book hi grant , hope all is well with you . i trust you got my message via the voicemail that ileft with vince late friday afternoon about my inability to travel - i ' m try...
+Non-zero features:    1012
+Top weighted tokens:  chapter: 0.097, chapter numtoken: 0.096, this chapter: 0.084, style options: 0.074, options chapter: 0.069, style: 0.067, american style: 0.066, multi factor: 0.060
+
+--- Sample Train Index 1 [Ham (0)] ---
+Snippet:              re : enron contact info christie , thanks again for taking the time to visit wharton and share about enron and our upcoming project . i know each of us is excited about the opportu...
+Non-zero features:    402
+Top weighted tokens:  wgo: 0.166, wgo emailtoken: 0.166, edu emailtoken: 0.166, emailtoken edu: 0.126, edu: 0.112, enthusiastic: 0.103, enron contact: 0.102, cummins: 0.087
+
+--- Sample Train Index 2 [Ham (0)] ---
+Snippet:              improved process for engaging temporary workers as you are aware , enron utilizes temporary staffing services to satisfy staffing requirements throughout the company . for the past...
+Non-zero features:    151
+Top weighted tokens:  staffing: 0.195, temporary staffing: 0.182, temporary: 0.167, project team: 0.163, ee: 0.148, administration: 0.137, researched: 0.107, marketing communications: 0.107
+
+--------------------------------------------------
+6. DATA LEAKAGE & INTEGRITY VERIFICATION
+--------------------------------------------------
+TF-IDF fitted strictly on X_train:  True
+X_test transformed with train vectorizer: True
+TF-IDF DATA LEAKAGE CHECK:          PASS
+
+--------------------------------------------------
+7. SAVED ARTIFACTS
+--------------------------------------------------
+Fitted Vectorizer:           D:\Projects\Spam email - ML model\models\tfidf_vectorizer.joblib
+Train/Test Split Arrays:     D:\Projects\Spam email - ML model\data\processed\train_test_split.npz
+
+--------------------------------------------------
+8. RATIONALE: WHY TF-IDF FOR SPAM CLASSIFICATION
+--------------------------------------------------
+1. Term Frequency Damping (Sublinear TF):
+   Spam emails frequently repeat trigger words (e.g. 'free', 'money').
+   Sublinear TF scaling replaces raw count 'tf' with '1 + log(tf)',
+   preventing keyword stuffing from distorting linear and probabilistic boundaries.
+
+2. Inverse Document Frequency (IDF):
+   Common terms across almost all emails receive low weights, while specific
+   spam markers (e.g., 'guaranteed', 'refinance', 'pharmaceutical') and ham markers
+   (e.g., 'enron', 'meeting', 'attached') receive appropriately high discriminative power.
+
+3. Bigram Context Preservation (ngram_range=(1, 2)):
+   Bi-grams preserve crucial multi-word phrases such as 'credit card', 'act now',
+   'numtoken color', 'special offer', which carry much stronger spam signal than
+   isolated unigrams alone.
+
+============================================================
+END OF FEATURE ENGINEERING REPORT
+============================================================

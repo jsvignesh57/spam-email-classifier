@@ -1,0 +1,232 @@
+==================================================
+SPAM EMAIL CLASSIFIER
+PHASE 5 — MODEL EVALUATION REPORT
+==================================================
+
+TEST DATA
+---------
+Test samples:
+1,139
+
+Ham:
+865
+
+Spam:
+274
+
+MODEL 1 — MULTINOMIAL NAIVE BAYES
+---------------------------------
+
+Accuracy:
+0.8753 (87.53%)
+
+Precision (Overall Weighted):
+0.8929
+
+Recall (Overall Weighted):
+0.8753
+
+F1-score (Overall Weighted):
+0.8583
+
+Spam Precision:
+1.0000 (100.00%)
+
+Spam Recall:
+0.4818 (48.18%)
+
+Spam F1-score:
+0.6502
+
+Confusion Matrix:
+[[865, 0],
+ [142, 132]]
+
+TN (Ham correctly classified):       865
+FP (Ham incorrectly classified Spam): 0
+FN (Spam incorrectly classified Ham): 142
+TP (Spam correctly classified):      132
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     Ham (0)     0.8590    1.0000    0.9241       865
+    Spam (1)     1.0000    0.4818    0.6502       274
+
+    accuracy                         0.8753      1139
+   macro avg     0.9295    0.7409    0.7872      1139
+weighted avg     0.8929    0.8753    0.8583      1139
+
+
+False Positives:
+Count: 0
+  None observed.
+
+False Negatives:
+Count: 142
+  Example 1:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      more than numtoken , numtoken u . s . jobs available are you looking for a job ? are you planning for a career change ? does your current job pay you little than the salary you deserved ? do you want information about who is currently hiring and thei...
+  Example 2:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      info you requested kcc thank you for your interest ! judgment coursesoffers an extensive training course in " how to collect moneyjudgments " if you are like many people , you are not even sure what a money judgment is and why processing money judgme...
+  Example 3:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      the best possible mortgage has your mortgage search got you down ? are you frustrated and confused with all the different terms and quotes ? don ' t know who is telling you the truth ? we can solve all your problems . visit our site today and in two...
+  Example 4:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      greetings from u . a . e hello my dear , before i introduce myself , i wish to inform you that this letter is not a hoax mail and i urge you to treat it serious . i am director of procurement department at the ministry of petroleum and mineral resour...
+  Example 5:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      you will receive the best prices available on viagra online if your sex life is good . . . then make it fantastic ! the covers of this book are too far apart . real freedom lies in wildness , not in civilization . with the gift of listening comes the...
+  Example 6:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      this one will make you money numtoken / numtoken / numtoken numtoken : numtoken : numtoken pm a great sponsor will not make you money . a great product line will not make you money either . a great compensation plan will not make you money either . a...
+  Example 7:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      delivery status notification ( failure ) the following message to was undeliverable . the reason for the problem : numtoken . numtoken . numtoken - unknown address error numtoken - ' numtoken . numtoken . numtoken unknown or illegal alias : emailtoke...
+  Example 8:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      foreign currency trading report volume over numtoken . numtoken trillion dollars a day tap into the high - income opportunity found in the world ' s largest financial market . the foreign currency markets discover how : $ numtoken , numtoken " proper...
+  Example 9:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      [ ilug ] bank error in your favor substantial monthly income makers voucher income transfer systems / distribution center pending income amount : up to $ numtoken , numtoken . numtoken good news ! you have made the substancial income makers list . th...
+  Example 10:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      anti - aging that works . no more botox no more painful botox sessions . . . we have the botox replacement cream is stokc ! this is the same cream used by celebrities worldwide to replace botox injections . tom cruise , gisele bundchen , britney spea...
+
+
+MODEL 2 — LINEAR SVM
+--------------------
+
+Accuracy:
+0.9956 (99.56%)
+
+Precision (Overall Weighted):
+0.9956
+
+Recall (Overall Weighted):
+0.9956
+
+F1-score (Overall Weighted):
+0.9956
+
+Spam Precision:
+0.9927 (99.27%)
+
+Spam Recall:
+0.9891 (98.91%)
+
+Spam F1-score:
+0.9909
+
+Confusion Matrix:
+[[863, 2],
+ [3, 271]]
+
+TN (Ham correctly classified):       863
+FP (Ham incorrectly classified Spam): 2
+FN (Spam incorrectly classified Ham): 3
+TP (Spam correctly classified):      271
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     Ham (0)     0.9965    0.9977    0.9971       865
+    Spam (1)     0.9927    0.9891    0.9909       274
+
+    accuracy                         0.9956      1139
+   macro avg     0.9946    0.9934    0.9940      1139
+weighted avg     0.9956    0.9956    0.9956      1139
+
+
+False Positives:
+Count: 2
+  Example 1:
+    Actual:    0 (Ham)
+    Predicted: 1 (Spam)
+    Text:      a basic idea of price - offer matching clauses vince - here is the basic idea i was alluding to : suppose a car dealer promised to " match any advertised price . " then his competitor would feel the need to respond in kind . and so on , until all dea...
+  Example 2:
+    Actual:    0 (Ham)
+    Predicted: 1 (Spam)
+    Text:      check out here is the rfc that was written in numtoken about the internet of numtoken i mentioned . i hope you find it as enlightening as i did , and enjoy it as well . click here : urltoken . isi . edu / in - notes / rfc / files / rfcl numtoken . tx...
+
+False Negatives:
+Count: 3
+  Example 1:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      urltoken ally - anywhere . com / sports / hello , i was hoping you could help me . the link above takes you to several facility stadiumtours created by virtually anywhere interactive . i would like to introduce the concept of a virtual tour to the ap...
+  Example 2:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      reduction in high blood pressure age should be nothing more than a number it ' s okay to want to hold on to your young body as long as you can view more about a new lifespan enhancement press here with increasing longevity for an increasing segment o...
+  Example 3:
+    Actual:    1 (Spam)
+    Predicted: 0 (Ham)
+    Text:      help television in numtoken by seat to my knoweledge . chrono cross in numtoken
+
+
+MODEL COMPARISON
+----------------
+
+Metric | Naive Bayes | Linear SVM
+---|---|---
+Accuracy | 0.8753 (87.53%) | 0.9956 (99.56%)
+Spam Precision | 1.0000 (100.00%) | 0.9927 (99.27%)
+Spam Recall | 0.4818 (48.18%) | 0.9891 (98.91%)
+Spam F1 | 0.6502 | 0.9909
+Macro F1 | 0.7872 | 0.9940
+Weighted F1 | 0.8583 | 0.9956
+False Positives | 0 | 2
+False Negatives | 142 | 3
+
+
+IMPORTANT SPAM METRICS DEFINITIONS
+-----------------------------------
+- Spam Precision: Of all emails predicted by the model as Spam, the fraction that is truly Spam.
+  High precision means very few legitimate emails (Ham) are mistakenly routed to the junk folder.
+- Spam Recall: Of all actual Spam emails, the fraction successfully detected by the model.
+  High recall means very few unsolicited spam messages slip into the primary inbox.
+- Spam F1-score: Harmonic mean of Spam Precision and Spam Recall, balancing false alarm penalty
+  and missed detection penalty into a unified performance measure.
+
+
+ERROR ANALYSIS DISCUSSION
+-------------------------
+1. False Positive Patterns (Ham misclassified as Spam):
+   - Emails containing commercial or transactional vocabulary (e.g. conference schedules, invoices, account links).
+   - Technical announcements containing dense URL/number tokens.
+   - Promotional internal corporate newsletters that share linguistic structure with marketing blasts.
+
+2. False Negative Patterns (Spam misclassified as Ham):
+   - Short conversational spam emails lacking overt aggressive sales keywords (e.g., informal greetings or brief requests).
+   - Spam messages heavily padded with benign conversational text or oblique references.
+   - Unconventional token variants or novel phrasing not heavily weighted during training.
+
+3. Model Behavioral Divergence:
+   - Naive Bayes exhibits high precision with conservative spam thresholding, resulting in fewer false alarms but more missed spam.
+   - Linear SVM achieves a distinct margin separation across high-dimensional TF-IDF space, yielding higher recall on spam tokens.
+   - NOTE: Model selection and trade-off decisions are strictly deferred to Phase 6.
+
+
+DATA LEAKAGE VERIFICATION
+-------------------------
+- Test set was reconstructed strictly from the Phase 3 train_test_split.npz test indices.
+- No new split was generated.
+- TF-IDF vectorizer was loaded and applied strictly via transform() on test texts.
+- Models were not retrained or adjusted.
+- Test labels were used solely for computing post-training evaluation metrics.
+- No out-of-sample data leaked into training.
+
+PHASE 5 DATA LEAKAGE CHECK: PASS

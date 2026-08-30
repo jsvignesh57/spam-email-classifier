@@ -1,0 +1,83 @@
+===========================================================================
+SPAM EMAIL CLASSIFIER -- DATA QUALITY AUDIT REPORT
+===========================================================================
+Dataset Path : D:\Projects\Spam email - ML model\data\raw\internship.csv
+File Size    : 8,954,755 bytes
+
+1. DATASET OVERVIEW
+---------------------------------------------------------------------------
+  - Total Records (Rows)   : 5,728
+  - Total Columns          : 2
+  - Column Details:
+      * 'text' : str
+      * 'spam' : int64
+  - Required Columns Check : PASSED (text, spam present)
+
+2. MISSING VALUES & EMPTY STRINGS
+---------------------------------------------------------------------------
+  - Missing Values in 'text' : 0
+  - Missing Values in 'spam' : 0
+  - Total Missing Values     : 0
+  - Empty Strings ("")       : 0
+  - Whitespace-Only Strings  : 0
+  - Non-String Data Types    : 0
+
+3. DUPLICATE ANALYSIS
+---------------------------------------------------------------------------
+  - Exact Duplicate Rows     : 33
+  - Duplicate 'text' Entries : 33
+  - Unique Email Texts       : 5,695
+
+4. LABEL VALIDATION & CONFLICT AUDIT
+---------------------------------------------------------------------------
+  - Valid Labels Detected    : [0, 1]
+  - Invalid Labels (Non 0/1) : [] (Count: 0)
+  - Conflicting Text Labels  : 0 (same text having different labels)
+
+5. CLASS DISTRIBUTION
+---------------------------------------------------------------------------
+  - Not Spam / Ham (0)         : 4,360 (76.12%)
+  - Spam (1)                   : 1,368 (23.88%)
+  - Total Samples              : 5,728
+  - Imbalance Ratio (Ham:Spam) : 3.19 : 1
+
+6. EMAIL LENGTH ANALYSIS (Character Count)
+---------------------------------------------------------------------------
+  - Minimum Length             : 13 chars
+  - Maximum Length             : 43,952 chars
+  - Mean Length                : 1,556.77 chars
+  - Median Length              : 979.00 chars
+  - Standard Deviation         : 2,042.65 chars
+  - 25th Percentile (Q1)       : 508.75 chars
+  - 75th Percentile (Q3)       : 1,894.25 chars
+  - 95th Percentile            : 4,554.50 chars
+  - 99th Percentile            : 9,341.46 chars
+  - Extremely Short (< 10 chars)  : 0 emails
+  - Extremely Long (>= 9341 chars): 58 emails (99th percentile threshold)
+
+7. CONTENT CHARACTERISTICS
+---------------------------------------------------------------------------
+  - Emails with 'Subject:' prefix   : 5,728 (100.00%)
+  - Emails with URLs/Web Domains    : 701 (12.24%)
+  - Emails with Email Addresses     : 1,811 (31.62%)
+  - Emails with Digits / Numbers    : 4,868 (84.99%)
+  - Emails with HTML Tags           : 0 (0.00%)
+  - Emails with Repeated Punctuation: 2,423 (42.30%)
+  - Emails with Non-ASCII Chars     : 0 (0.00%)
+
+8. FINAL AUDIT SUMMARY & ACTION RECOMMENDATIONS
+---------------------------------------------------------------------------
+#   | Issue / Characteristic             | Status     | Affected               | Recommended Action
+-----------------------------------------------------------------------------------------------------------------------------
+1   | Missing / Null Values              | CLEAN      | 0                      | Preserve as-is; no missing value imputation or row deletion needed.
+2   | Empty / Whitespace-Only Emails     | CLEAN      | 0                      | Preserve as-is; all 5,728 records contain valid text.
+3   | Exact Duplicate Rows               | DETECTED   | 33 rows                | Remove later (33 duplicate rows should be dropped in preprocessing to prevent data leakage and inflated evaluation scores).
+4   | Conflicting Labels (Multi-label te | CLEAN      | 0 instances            | Preserve / No Action (0 conflicting labels detected; duplicates share identical labels).
+5   | Invalid Label Values (Non 0/1)     | CLEAN      | 0                      | Preserve (All labels strictly conform to binary {0, 1}).
+6   | Class Imbalance (Ham vs Spam)      | NOTE       | Ham: 4360 (76.1%) / Sp | Investigate & Handle during training/evaluation (Use StratifiedKFold cross-validation; prioritize F1-score & Precision-Recall over raw accuracy).
+7   | 'Subject:' Email Prefix Artifact   | DETECTED   | 5728 (100.0%)          | Clean later during text preprocessing (Strip common email header prefix to prevent bias).
+8   | URLs & Web Domains                 | DETECTED   | 701 (12.2%)            | Clean / Normalize later (Replace with normalized token like 'httpaddr' or preserve domain clues for spam indicator).
+9   | Email Addresses in Body            | DETECTED   | 1811 (31.6%)           | Clean / Normalize later (Replace with normalized token like 'emailaddr' to generalize features).
+10  | Numbers / Digits                   | DETECTED   | 4868 (85.0%)           | Clean / Normalize later (Replace with 'numtoken' or normalize monetary/numeric patterns).
+11  | Length Outliers (99th %ile)        | NOTE       | 58 emails >= 9341 char | Preserve (Long emails are legitimate messages; use TF-IDF max_features/sublinear_tf rather than dropping them).
+===========================================================================

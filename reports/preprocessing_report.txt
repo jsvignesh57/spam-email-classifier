@@ -1,0 +1,94 @@
+============================================================
+SPAM EMAIL CLASSIFIER — TEXT PREPROCESSING REPORT
+Phase 2: Data Cleaning and Text Preprocessing
+============================================================
+
+--------------------------------------------------
+DATASET RECORD COUNTS
+--------------------------------------------------
+Original records:            5,728
+Duplicate records removed:   33
+Final records:               5,695
+Expected records verified:   True
+
+--------------------------------------------------
+COLUMNS AND SCHEMA
+--------------------------------------------------
+Original columns:            ['text', 'spam']
+Final columns:               ['text', 'spam']
+Schema validation passed:    True
+
+--------------------------------------------------
+LABEL DISTRIBUTION
+--------------------------------------------------
+Before preprocessing:
+  - Ham  (0): 4,360 (76.12%)
+  - Spam (1): 1,368 (23.88%)
+After preprocessing:
+  - Ham  (0): 4,327 (75.98%)
+  - Spam (1): 1,368 (24.02%)
+Label integrity preserved:   True
+
+--------------------------------------------------
+TOKENIZATION & NORMALIZATION STATISTICS
+--------------------------------------------------
+Subject prefixes removed:    5,695
+Email addresses normalized:  5,164 (replaced with 'emailtoken')
+URLs normalized:             1,880 (replaced with 'urltoken')
+Numeric sequences normalized:89,195 (replaced with 'numtoken')
+Empty texts after processing:0
+
+--------------------------------------------------
+DESIGN RULES ADHERENCE
+--------------------------------------------------
+  [x] Raw dataset untouched (data/raw/internship.csv)
+  [x] Exact duplicates removed (33 rows)
+  [x] Target labels preserved (0 = Ham, 1 = Spam)
+  [x] Subject: header prefix stripped (subject content preserved)
+  [x] Email addresses normalized to 'emailtoken'
+  [x] URLs/domains normalized to 'urltoken'
+  [x] Standalone numbers normalized to 'numtoken'
+  [x] Text converted to lowercase
+  [x] Whitespace normalized
+  [x] Punctuation preserved (signal for spam)
+  [x] Stopwords preserved
+  [x] Stemming/lemmatization skipped
+  [x] Long emails preserved without truncation
+  [x] No feature extraction (TF-IDF) or model training performed
+
+--------------------------------------------------
+SAMPLE TRANSFORMATIONS (BEFORE vs AFTER)
+--------------------------------------------------
+--- Example 1 [Label: Spam (1)] ---
+BEFORE (Raw):
+  Subject: 4 color printing special  request additional information now ! click here  click here for a printable version of our order form ( pdf format )  phone : ( 626 ) 338 - 8090 fax : ( 626 ) 338 - 8102 e - mail : rams...
+AFTER (Cleaned):
+  numtoken color printing special request additional information now ! click here click here for a printable version of our order form ( pdf format ) phone : ( numtoken ) numtoken - numtoken fax : ( numtoken ) numtoken - n...
+
+--- Example 2 [Label: Spam (1)] ---
+BEFORE (Raw):
+  Subject: las vegas high rise boom  las vegas is fast becoming a major metropolitan city ! 60 +  new high rise towers are expected to be built on and around the las vegas strip  within the next 3 - 4 years , that ' s 30 ,...
+AFTER (Cleaned):
+  las vegas high rise boom las vegas is fast becoming a major metropolitan city ! numtoken + new high rise towers are expected to be built on and around the las vegas strip within the next numtoken - numtoken years , that ...
+
+--- Example 3 [Label: Ham (0)] ---
+BEFORE (Raw):
+  Subject: hello guys ,  i ' m " bugging you " for your completed questionnaire and for a one - page  bio / statement on your thoughts on " business edu and the new economy " . if  my records are incorrect please re - ship...
+AFTER (Cleaned):
+  hello guys , i ' m " bugging you " for your completed questionnaire and for a one - page bio / statement on your thoughts on " business edu and the new economy " . if my records are incorrect please re - ship your respon...
+
+--- Example 4 [Label: Ham (0)] ---
+BEFORE (Raw):
+  Subject: from the enron india newsdesk - jan 18 th newsclips  vince ,  fyi .  - - - - - - - - - - - - - - - - - - - - - - forwarded by sandeep kohli / enron _ development on  01 / 19 / 2001 05 : 12 pm - - - - - - - - - -...
+AFTER (Cleaned):
+  from the enron india newsdesk - jan numtoken th newsclips vince , fyi . - - - - - - - - - - - - - - - - - - - - - - forwarded by sandeep kohli / enron _ development on numtoken / numtoken / numtoken numtoken : numtoken p...
+
+--- Example 5 [Label: Ham (0)] ---
+BEFORE (Raw):
+  Subject: request for historical curve information  vince ,  per our conversation this morning , i would appreciate the following  historical curve information as soon as possible :  1 . on february 17 , 2000 , what was t...
+AFTER (Cleaned):
+  request for historical curve information vince , per our conversation this morning , i would appreciate the following historical curve information as soon as possible : numtoken . on february numtoken , numtoken , what w...
+
+============================================================
+END OF PREPROCESSING REPORT
+============================================================

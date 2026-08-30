@@ -1,0 +1,16 @@
+{
+    "model": "LinearSVC",
+    "C": 10.0,
+    "feature_representation": "word TF-IDF (1,2)",
+    "decision_threshold": -0.75,
+    "selection_method": "out-of-fold training validation",
+    "locked_test_recall": 1.0,
+    "locked_test_precision": 0.7590027700831025,
+    "locked_test_f1": 0.862992125984252,
+    "locked_test_accuracy": 0.9236172080772608,
+    "FP": 87,
+    "FN": 0,
+    "TP": 274,
+    "TN": 778,
+    "status": "EXPERIMENTAL_CANDIDATE_CONFIG"
+}

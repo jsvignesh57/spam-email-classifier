@@ -1,0 +1,81 @@
+==================================================
+SPAM EMAIL CLASSIFIER
+PHASE 4 — MODEL TRAINING REPORT
+==================================================
+
+DATASET
+--------
+Input:
+data/processed/cleaned_internship.csv
+
+Records:
+5,695
+
+Training records:
+4,556
+
+Features:
+121,288
+
+TRAINING SPLIT
+--------------
+Train indices:
+4,556
+
+Test indices:
+1,139
+
+Split:
+80/20 stratified
+
+Random state:
+42
+
+MODEL 1
+--------
+Model:
+Multinomial Naive Bayes
+
+Parameters:
+alpha = 1.0
+
+Training status:
+SUCCESS
+
+Saved artifact:
+models/naive_bayes_model.joblib
+
+MODEL 2
+--------
+Model:
+Linear Support Vector Machine
+
+Parameters:
+C = 1.0
+random_state = 42
+
+Training status:
+SUCCESS
+
+Saved artifact:
+models/linear_svm_model.joblib
+
+ARTIFACT VERIFICATION
+---------------------
+Naive Bayes reload:
+PASS
+
+Linear SVM reload:
+PASS
+
+TF-IDF vectorizer:
+PASS
+
+DATA LEAKAGE
+------------
+Confirm:
+
+- TF-IDF was fitted only during Phase 3 on training data.
+- Phase 4 reused the fitted vectorizer.
+- No test samples were used during model fitting.
+- No new train/test split was created.

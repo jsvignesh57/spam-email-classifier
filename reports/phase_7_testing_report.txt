@@ -1,0 +1,459 @@
+============================================================
+SPAM EMAIL CLASSIFIER
+PHASE 7 — FINAL MODEL TESTING REPORT
+============================================================
+
+FINAL MODEL
+-----------
+Algorithm:
+Linear Support Vector Machine
+
+Implementation:
+sklearn.svm.LinearSVC
+
+Artifact:
+models/final_spam_classifier.joblib
+
+TF-IDF:
+models/tfidf_vectorizer.joblib
+
+Features:
+121,288
+
+CLASS MAPPING
+-------------
+0 = Not Spam / Ham
+1 = Spam
+
+PIPELINE VERIFICATION
+---------------------
+Preprocessing:                     PASS
+TF-IDF loading:                    PASS
+Model loading:                     PASS
+Model/vectorizer compatibility:     PASS
+Feature dimension (121,288):       PASS
+Inference leakage check:           PASS
+Artifact immutability check:       PASS
+
+INPUT VALIDATION & EDGE CASE HANDLING
+-------------------------------------
+[PASS] EDGE-01: Empty String (Valid: False, Expected Valid: False)
+       Validation Output: ERROR: Email text cannot be empty or whitespace-only.
+[PASS] EDGE-02: Whitespace Only (Valid: False, Expected Valid: False)
+       Validation Output: ERROR: Email text cannot be empty or whitespace-only.
+[PASS] EDGE-03: Non-string Input (None) (Valid: False, Expected Valid: False)
+       Validation Output: ERROR: Email text must be a non-null string.
+[PASS] EDGE-04: Unicode and Non-ASCII Characters (Valid: True, Expected Valid: True)
+[PASS] EDGE-05: Heavy Punctuation & Numbers (Valid: True, Expected Valid: True)
+[PASS] EDGE-06: Long Email Text (2000+ words) (Valid: True, Expected Valid: True)
+
+MANUAL TEST RESULTS
+-------------------
+Total test cases:            24
+Correct:                     20
+Incorrect:                   4
+Qualitative test accuracy:   83.33% (20/24)
+
+CATEGORY RESULTS
+----------------
+Obvious Spam:
+  Total:      6
+  Correct:    5
+  Incorrect:  1
+  Accuracy:   83.3%
+
+Obvious Ham:
+  Total:      6
+  Correct:    6
+  Incorrect:  0
+  Accuracy:   100.0%
+
+Promotional / Ambiguous:
+  Total:      6
+  Correct:    3
+  Incorrect:  3
+  Accuracy:   50.0%
+
+Short / Difficult:
+  Total:      6
+  Correct:    6
+  Incorrect:  0
+  Accuracy:   100.0%
+
+DETAILED TEST CASE EXECUTION LOG
+--------------------------------
+----------------------------------------
+TEST ID: SPAM-01
+Category: Obvious Spam (Fake International Sweepstakes / Lottery Prize)
+
+Email:
+"URGENT NOTICE: You have been selected as the official winner of our $5,000,000 international sweepstakes! Claim your cash prize immediately by clicking https://secure-cash-reward99.com/claim or reply with your bank account details and full SSN. Offer expires in 24 hours!"
+
+Expected:       SPAM (1)
+Predicted:      SPAM (1)
+Decision Score: +0.7069 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SPAM-02
+Category: Obvious Spam (Urgent Phishing & Account Suspension Warning)
+
+Email:
+"Dear valued customer, your Bank account has been temporarily locked due to suspicious unauthorized activity. Verify your identity immediately at http://bank-secure-login-verify.net/auth to restore access, or your funds will be frozen permanently. Call 1-800-555-0199."
+
+Expected:       SPAM (1)
+Predicted:      SPAM (1)
+Decision Score: +0.3352 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SPAM-03
+Category: Obvious Spam (Crypto Multiplier / Get-Rich-Quick Scam)
+
+Email:
+"Work from home and earn $1,500 daily guaranteed! No experience required. Invest only $100 in our automated crypto trading bot and watch your money multiply 10x in 48 hours. Register now at www.crypto-wealth-fast.org/start."
+
+Expected:       SPAM (1)
+Predicted:      SPAM (1)
+Decision Score: +1.0395 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SPAM-04
+Category: Obvious Spam (Advance-Fee Foreign Inheritance Proposition)
+
+Email:
+"Confidential Proposition: I am Barrister Williams representing the late estate of Mr. Edward, who left $14.5 Million with no beneficiary. Contact me at barrister.williams77@law-offices-intl.com to receive 40% of the funds into your foreign bank account."
+
+Expected:       SPAM (1)
+Predicted:      SPAM (1)
+Decision Score: +0.4740 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SPAM-05
+Category: Obvious Spam (Unlicensed Online Pharmacy & Medication Discounts)
+
+Email:
+"Buy generic pharmaceuticals online without prescription! 80% discount on all weight loss pills and pain relief medications. Fast discreet overnight shipping worldwide. Visit http://meds-online-direct-store.biz today!"
+
+Expected:       SPAM (1)
+Predicted:      SPAM (1)
+Decision Score: +1.0193 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SPAM-06
+Category: Obvious Spam (Cloud Storage Quota Termination Phishing)
+
+Email:
+"Final Warning: Your cloud email storage is 99% full. All incoming messages will be deleted unless you upgrade storage quota immediately by clicking http://cloud-quota-upgrade-portal.info/login."
+
+Expected:       SPAM (1)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.0567 (> 0 => Spam, <= 0 => Ham)
+Result:         MISCLASSIFIED
+----------------------------------------
+
+----------------------------------------
+TEST ID: HAM-01
+Category: Obvious Ham (Academic / Research Paper Collaboration)
+
+Email:
+"Hi Professor Miller, I have completed the draft of our machine learning paper on transformer attention mechanisms and attached the PDF for your review. Could we meet during your office hours on Thursday at 2:00 PM to discuss your feedback? Thanks, Sarah."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.8611 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: HAM-02
+Category: Obvious Ham (Internal Team Sprint & Meeting Schedule)
+
+Email:
+"Team, please note that tomorrow's weekly sprint retrospective has been rescheduled from 10:00 AM to 11:30 AM in Conference Room B. Please update your Jira tickets and review the deployment checklist before the meeting."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -1.0284 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: HAM-03
+Category: Obvious Ham (Software Engineering Code Review / PR Feedback)
+
+Email:
+"Hey Dave, I reviewed your pull request for the user authentication bug fix. The logic looks solid, but please add a unit test for the edge case where the token expires before the refresh request is sent. Let me know when pushed."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.7024 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: HAM-04
+Category: Obvious Ham (Personal Family Dinner Arrangement)
+
+Email:
+"Hey Mark, are we still meeting up for dinner this Saturday? Mom mentioned that Uncle Joe might join us as well. Let me know what time works best for you so I can book a table at the Italian place downtown."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.8828 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: HAM-05
+Category: Obvious Ham (Internal Departmental Financial Forecast)
+
+Email:
+"Attached is the Q3 financial summary and budget forecast for the engineering department. We are currently 4% under budget for the quarter. Please review the spreadsheet prior to Monday's executive committee meeting."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.9458 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: HAM-06
+Category: Obvious Ham (University Course Announcement & Office Hours)
+
+Email:
+"Dear students, the assignment 3 solutions have been posted on the course portal. The midterm exam will cover chapters 1 through 5. Please reach out to the teaching assistants if you have any questions regarding grading."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.8596 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: PROM-01
+Category: Promotional / Ambiguous (Retail Store Discount / Newsletter Promotion)
+
+Email:
+"Special Weekend Offer: Enjoy 20% off all winter apparel and outdoor gear at NorthPeak Outfitters. Use coupon code WINTER20 at checkout on northpeak.com. Free shipping on orders over $50. Unsubscribe at any time."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      SPAM (1)
+Decision Score: +0.3425 (> 0 => Spam, <= 0 => Ham)
+Result:         MISCLASSIFIED
+----------------------------------------
+
+----------------------------------------
+TEST ID: PROM-02
+Category: Promotional / Ambiguous (Professional Cloud Tech Webinar Invitation)
+
+Email:
+"Join us this Wednesday at 1:00 PM EST for a live webinar on Cloud Architecture Best Practices with AWS and Kubernetes. Register for free at https://tech-summits.org/webinar-2026. All attendees receive access to recorded sessions."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.2077 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: PROM-03
+Category: Promotional / Ambiguous (Professional Social Network Activity Digest)
+
+Email:
+"You have 3 new notifications on your professional profile. Jane Doe and 2 other connections recently viewed your profile and shared a new post regarding data engineering trends. Click here to see your updates."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      SPAM (1)
+Decision Score: +0.1041 (> 0 => Spam, <= 0 => Ham)
+Result:         MISCLASSIFIED
+----------------------------------------
+
+----------------------------------------
+TEST ID: PROM-04
+Category: Promotional / Ambiguous (SaaS Software Product Feature Release Notes)
+
+Email:
+"We are excited to announce version 4.2 of TaskFlow! New features include dark mode, enhanced team boards, and automated Slack notifications. Read the full release notes and try the new features today."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.5062 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: PROM-05
+Category: Promotional / Ambiguous (Annual Software Subscription Renewal Notice)
+
+Email:
+"Your annual subscription to Developer Pro will renew on September 15 for $99.00. If you wish to manage your subscription or update your payment method, please visit your account billing settings."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      SPAM (1)
+Decision Score: +0.0825 (> 0 => Spam, <= 0 => Ham)
+Result:         MISCLASSIFIED
+----------------------------------------
+
+----------------------------------------
+TEST ID: PROM-06
+Category: Promotional / Ambiguous (Corporate Technical Conference Early-Bird Registration)
+
+Email:
+"Early Bird Registration is now open for the Annual Python Developers Conference in Chicago. Save $150 when you register before the end of the month. Visit https://pyconf-2026.org/tickets for group discounts."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.1262 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SHORT-01
+Category: Short / Difficult (Ultra-Short Meeting Update)
+
+Email:
+"Meeting moved to 4 PM."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.6012 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SHORT-02
+Category: Short / Difficult (Single-Word Congratulatory Exclamation)
+
+Email:
+"Congratulations!"
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.8197 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SHORT-03
+Category: Short / Difficult (Short Callback Request)
+
+Email:
+"Please call me."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -1.1059 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SHORT-04
+Category: Short / Difficult (Short Invoice Attachment Notice)
+
+Email:
+"Your invoice is attached."
+
+Expected:       NOT SPAM / HAM (0)
+Predicted:      NOT SPAM / HAM (0)
+Decision Score: -0.4125 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SHORT-05
+Category: Short / Difficult (Short URL-Only Suspicious Link)
+
+Email:
+"Check this out: https://free-gift-cards-claim-now.xyz"
+
+Expected:       SPAM (1)
+Predicted:      SPAM (1)
+Decision Score: +0.1484 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+----------------------------------------
+TEST ID: SHORT-06
+Category: Short / Difficult (Short High-Intensity Spam Slogan)
+
+Email:
+"Call NOW: 1-800-555-9999 $$$ FREE !!!"
+
+Expected:       SPAM (1)
+Predicted:      SPAM (1)
+Decision Score: +0.2750 (> 0 => Spam, <= 0 => Ham)
+Result:         PASS
+----------------------------------------
+
+MISCLASSIFIED CASES & ERROR ANALYSIS
+------------------------------------
+Test ID:          SPAM-06
+Category:         Obvious Spam
+Email Text:       "Final Warning: Your cloud email storage is 99% full. All incoming messages will be deleted unless you upgrade storage quota immediately by clicking http://cloud-quota-upgrade-portal.info/login."
+Expected:         SPAM (1)
+Predicted:        NOT SPAM / HAM (0)
+Decision Score:   -0.0567
+Analysis:         Possible reason: Spam message vocabulary lacked dominant spam n-grams or relied on novel phrasings not heavily weighted in the training vocabulary.
+
+Test ID:          PROM-01
+Category:         Promotional / Ambiguous
+Email Text:       "Special Weekend Offer: Enjoy 20% off all winter apparel and outdoor gear at NorthPeak Outfitters. Use coupon code WINTER20 at checkout on northpeak.com. Free shipping on orders over $50. Unsubscribe at any time."
+Expected:         NOT SPAM / HAM (0)
+Predicted:        SPAM (1)
+Decision Score:   +0.3425
+Analysis:         Possible reason: Promotional phrasing shares vocabulary tokens (e.g. 'offer', 'free', 'discount') with marketing spam in the training corpus, leading to decision score boundary shifts.
+
+Test ID:          PROM-03
+Category:         Promotional / Ambiguous
+Email Text:       "You have 3 new notifications on your professional profile. Jane Doe and 2 other connections recently viewed your profile and shared a new post regarding data engineering trends. Click here to see your updates."
+Expected:         NOT SPAM / HAM (0)
+Predicted:        SPAM (1)
+Decision Score:   +0.1041
+Analysis:         Possible reason: Promotional phrasing shares vocabulary tokens (e.g. 'offer', 'free', 'discount') with marketing spam in the training corpus, leading to decision score boundary shifts.
+
+Test ID:          PROM-05
+Category:         Promotional / Ambiguous
+Email Text:       "Your annual subscription to Developer Pro will renew on September 15 for $99.00. If you wish to manage your subscription or update your payment method, please visit your account billing settings."
+Expected:         NOT SPAM / HAM (0)
+Predicted:        SPAM (1)
+Decision Score:   +0.0825
+Analysis:         Possible reason: Promotional phrasing shares vocabulary tokens (e.g. 'offer', 'free', 'discount') with marketing spam in the training corpus, leading to decision score boundary shifts.
+
+INTERACTIVE TEST
+----------------
+Terminal interactive mode: PASS (Fully implemented and verified)
+
+EVALUATION DISTINCTION & CONTEXT
+--------------------------------
+Phase 5 Evaluation (Statistical / Held-Out Test Set):
+  - Dataset Size:      1,139 emails (20% held-out split)
+  - Accuracy:          99.56%
+  - Spam Precision:    99.27%
+  - Spam Recall:       98.91%
+  - Spam F1-Score:     99.09%
+
+Phase 7 Testing (Qualitative / Unseen Manual Cases):
+  - Test Set Size:     24 manually crafted diverse email scenarios
+  - Accuracy:          83.33%
+  - Purpose:           End-to-end inference verification, edge-case robustness, and qualitative behavioral audit.
+  - Note:              Manual test accuracy is qualitative and does NOT replace the Phase 5 statistical evaluation.
+
+FINAL CONCLUSION
+----------------
+The final Linear Support Vector Machine (LinearSVC) model and TF-IDF vectorizer
+successfully executed the complete end-to-end inference pipeline on brand-new, unseen
+email text. All pipeline stages (loading, preprocessing, feature extraction, and classification)
+operate seamlessly without data leakage, retraining, or artifact modification.
+
+============================================================
+END OF PHASE 7 TESTING REPORT
+============================================================

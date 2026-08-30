@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Production-ready Spam Email Classifier web application powered by a frozen LinearSVC model and TF-IDF n-gram feature extraction.">
+    <meta name="theme-color" content="#0f172a">
+    <title>Spam Email Classifier — Machine Learning Application</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Application Stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand-badge">
+                    <span class="pulse-dot"></span>
+                    <span>Production Model v2.0 • Frozen</span>
+                </div>
+                <h1 class="app-title">Spam Email Classifier</h1>
+                <p class="app-subtitle">
+                    Check whether an email message is likely to be spam or legitimate using an optimized Linear Support Vector Machine.
+                </p>
+            </div>
+        </header>
+
+        <!-- Main Content Layout -->
+        <main class="app-main">
+            <!-- Classifier Card -->
+            <section class="card classifier-card" aria-labelledby="classifier-heading">
+                <div class="card-header">
+                    <h2 id="classifier-heading" class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Email Input
+                    </h2>
+                    
+                    <!-- Quick Example Samples -->
+                    <div class="sample-chips">
+                        <span class="sample-label">Quick test:</span>
+                        <button type="button" class="chip-btn chip-spam" id="sample-spam-btn" title="Load sample spam email">
+                            Sample Spam
+                        </button>
+                        <button type="button" class="chip-btn chip-ham" id="sample-ham-btn" title="Load sample legitimate email">
+                            Sample Legitimate
+                        </button>
+                    </div>
+                </div>
+
+                <form id="classifier-form" novalidate>
+                    <div class="input-group">
+                        <label for="email-input" class="sr-only">Email content to classify</label>
+                        <textarea
+                            id="email-input"
+                            name="email"
+                            rows="8"
+                            maxlength="50000"
+                            placeholder="Paste your email content here (subject and body)..."
+                            aria-describedby="char-count input-help"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <!-- Input Meta Info: Character Count & Warnings -->
+                    <div class="input-meta">
+                        <div id="input-help" class="meta-help">
+                            Max 50,000 characters. In-memory classification.
+                        </div>
+                        <div id="char-count" class="char-counter" aria-live="polite">
+                            <span id="current-chars">0</span> / 50,000
+                        </div>
+                    </div>
+
+                    <!-- Client-Side Validation / Error Banner -->
+                    <div id="input-error" class="alert-banner alert-error" role="alert" style="display: none;">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span id="input-error-text">Please enter an email to analyze.</span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="button-row">
+                        <button type="submit" id="check-btn" class="btn btn-primary">
+                            <span class="btn-spinner" id="btn-spinner" style="display: none;"></span>
+                            <svg class="btn-icon" id="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <span id="btn-text">Check Email</span>
+                        </button>
+
+                        <button type="button" id="clear-btn" class="btn btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Result Area (Initially Hidden) -->
+                <div id="result-container" class="result-card" aria-live="polite" style="display: none;">
+                    <div class="result-header">
+                        <div class="result-badge-wrap">
+                            <div id="result-badge" class="result-badge badge-spam">
+                                <span id="result-badge-icon" class="badge-icon"></span>
+                                <span id="result-badge-text">SPAM EMAIL</span>
+                            </div>
+                            <p id="result-summary" class="result-summary-text">
+                                This email exhibits characteristics consistent with spam.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="result-details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Model Architecture</span>
+                            <span class="detail-value" id="detail-model">LinearSVC (C=10.0)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Decision Boundary</span>
+                            <span class="detail-value">Threshold = 0.00</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Raw Decision Score</span>
+                            <span class="detail-value score-value" id="detail-score">+0.0000</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Classification Rule</span>
+                            <span class="detail-value" id="detail-rule">Score &ge; 0.0 &rarr; Spam</span>
+                        </div>
+                    </div>
+
+                    <div class="result-note">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>
+                            <strong>Decision Score Note:</strong> The score represents the signed geometric distance to the separating hyperplane in high-dimensional TF-IDF feature space (Ham &lt; 0.0, Spam &ge; 0.0). It is a margin value, not a probability.
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section class="card info-card" aria-labelledby="how-it-works-heading">
+                <h2 id="how-it-works-heading" class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    How the Classification Pipeline Works
+                </h2>
+                
+                <div class="pipeline-grid">
+                    <div class="pipeline-step">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Text Normalization</h3>
+                        <p class="step-desc">
+                            The email is processed by <code>src/preprocess.py</code>: header prefixes are removed, emails, URLs, and numbers are replaced with semantic tokens, and whitespace is normalized.
+                        </p>
+                    </div>
+
+                    <div class="pipeline-step">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">TF-IDF Vectorization</h3>
+                        <p class="step-desc">
+                            The normalized text is transformed into a 121,288-dimensional word-level TF-IDF feature vector (unigrams + bigrams) with sublinear term-frequency scaling.
+                        </p>
+                    </div>
+
+                    <div class="pipeline-step">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">LinearSVC Margin</h3>
+                        <p class="step-desc">
+                            The frozen Linear Support Vector Classifier calculates the signed geometric distance between the email's feature vector and the decision hyperplane.
+                        </p>
+                    </div>
+
+                    <div class="pipeline-step">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">Verdict Output</h3>
+                        <p class="step-desc">
+                            If the decision score is &ge; 0.0, the email is classified as <strong>SPAM</strong>; otherwise, it is returned as <strong>NOT SPAM</strong>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Model Benchmark & Evaluation -->
+            <section class="card info-card" aria-labelledby="benchmark-heading">
+                <div class="benchmark-header">
+                    <div>
+                        <h2 id="benchmark-heading" class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20v-6M6 20V10M18 20V4"></path>
+                            </svg>
+                            Model Benchmark & Performance
+                        </h2>
+                        <p class="benchmark-subtitle">
+                            Evaluated on the locked 1,139-sample test partition (865 Ham, 274 Spam).
+                        </p>
+                    </div>
+                    <a href="/docs" class="api-link" target="_blank" rel="noopener noreferrer">
+                        <span>API Documentation</span>
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-value">99.74%</span>
+                        <span class="metric-label">Test Accuracy</span>
+                        <span class="metric-sub">1,136 / 1,139 correct</span>
+                    </div>
+                    <div class="metric-card highlight-metric">
+                        <span class="metric-value">99.64%</span>
+                        <span class="metric-label">Spam Recall</span>
+                        <span class="metric-sub">273 / 274 spam caught</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">99.27%</span>
+                        <span class="metric-label">Spam Precision</span>
+                        <span class="metric-sub">2 FP on test set</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">0.9945</span>
+                        <span class="metric-label">Spam F1-Score</span>
+                        <span class="metric-sub">Harmonic balance</span>
+                    </div>
+                </div>
+
+                <p class="metrics-disclaimer">
+                    <strong>Note:</strong> Benchmark figures represent offline evaluation against the project's frozen test set and describe general model capability. They are not confidence probabilities for individual inputs.
+                </p>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-privacy">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Privacy Notice: Email text is processed strictly in-memory for classification and is not stored or logged by this application.</span>
+            </div>
+            <div class="footer-meta">
+                <p>Spam Email Classifier — Machine Learning Project</p>
+                <div class="footer-links">
+                    <a href="/health" target="_blank" rel="noopener noreferrer">Health Status</a>
+                    <span>•</span>
+                    <a href="/docs" target="_blank" rel="noopener noreferrer">FastAPI Docs</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

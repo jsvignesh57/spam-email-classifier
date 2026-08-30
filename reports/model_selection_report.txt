@@ -1,0 +1,77 @@
+==================================================
+SPAM EMAIL CLASSIFIER
+PHASE 6 — MODEL SELECTION REPORT
+==================================================
+
+CANDIDATE MODELS
+----------------
+
+1. Multinomial Naive Bayes (sklearn.naive_bayes.MultinomialNB)
+2. Linear Support Vector Machine (sklearn.svm.LinearSVC)
+
+EVALUATION COMPARISON
+---------------------
+
+Metric | Naive Bayes | Linear SVM
+---|---|---
+Accuracy | 0.8753 (87.53%) | 0.9956 (99.56%)
+Spam Precision | 1.0000 (100.00%) | 0.9927 (99.27%)
+Spam Recall | 0.4818 (48.18%) | 0.9891 (98.91%)
+Spam F1 | 0.6502 | 0.9909
+Macro F1 | 0.7872 | 0.9940
+Weighted F1 | 0.8583 | 0.9956
+False Positives | 0 | 2
+False Negatives | 142 | 3
+True Positives | 132 | 271
+True Negatives | 865 | 863
+
+MODEL ANALYSIS & TRADE-OFF EVALUATION
+-------------------------------------
+
+1. Multinomial Naive Bayes:
+   - Spam Precision: 100.00% (1.0000)
+   - False Positives: 0 (No legitimate emails were misclassified as spam)
+   - Spam Recall: 48.18% (0.4818)
+   - False Negatives: 142 (Missed 142 out of 274 total spam emails)
+   - Spam F1-Score: 0.6502
+   - Technical Summary: While Naive Bayes provides an ideal zero-false-positive rate, its
+     conditional independence assumption causes severe probability underestimation on long,
+     varied email texts, resulting in over 51.8% of spam emails evading detection.
+
+2. Linear Support Vector Machine:
+   - Accuracy: 99.56% (0.9956)
+   - Spam Precision: 99.27% (0.9927)
+   - False Positives: 2 (Only 2 legitimate emails misclassified out of 865)
+   - Spam Recall: 98.91% (0.9891)
+   - False Negatives: 3 (Only 3 spam emails missed out of 274)
+   - Spam F1-Score: 0.9909
+   - Technical Summary: Linear SVM constructs an optimal maximum-margin hyperplane in the
+     high-dimensional sparse TF-IDF space (121,288 features), achieving outstanding discriminative
+     separation between ham and spam. It captures complex unigram and bigram patterns effectively.
+
+FINAL MODEL SELECTION
+---------------------
+
+Selected Model:
+Linear Support Vector Machine (LinearSVC)
+
+Reason for Selection:
+Linear Support Vector Machine (LinearSVC) provides a substantially better balance between spam detection (98.91% recall) and protection of legitimate emails (99.27% precision), detecting 271 of 274 spam emails while incorrectly flagging only 2 legitimate emails. Its spam F1-score of 0.9909 substantially surpasses Multinomial Naive Bayes (0.6502).
+
+Decision Basis:
+This decision is strictly based on the Phase 5 held-out test evaluation results (1,139 unseen emails).
+
+FINAL ARTIFACT
+--------------
+
+models/final_spam_classifier.joblib
+
+TF-IDF ARTIFACT
+---------------
+
+models/tfidf_vectorizer.joblib
+
+METADATA
+--------
+
+models/model_metadata.json
